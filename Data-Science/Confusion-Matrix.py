@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[69]:
+# In[2]:
 
 
+#Import Library
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -26,21 +27,27 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score,recall_score,f1_score
 
 
-# In[30]:
+# In[5]:
 
 
 #データセットの読込
 dataset = load_breast_cancer()
 X = pd.DataFrame(data=dataset.data,columns=dataset.feature_names)
 t = pd.Series(data=dataset.target,name="t")
-X.join(y).head()
 
 #特徴量の確認
 print(f"X's shape:{X.shape}")
 print(f"t's shape:{t.shape}")
 
 
-# In[36]:
+# In[11]:
+
+
+from IPython.core.display import display
+display(X.join(t).head())
+
+
+# In[12]:
 
 
 #ホールドアウト法による分割
@@ -55,7 +62,7 @@ print(f"X-test's shape : {X_test.shape}")
 print(f"t-test's shape : {t_test.shape}")
 
 
-# In[39]:
+# In[13]:
 
 
 #モデル学習
@@ -67,7 +74,7 @@ pipe_line = Pipeline([("scl",StandardScaler()),
 pipe_line.fit(X_train,t_train)
 
 
-# In[102]:
+# In[49]:
 
 
 #予測値の算出
@@ -76,7 +83,18 @@ y_pred = pipe_line.predict(X_test)
 #Confusion Matrixの作成
 labels = [1,0]
 confmat = confusion_matrix(y_true=t_test,y_pred=y_pred,labels=labels)
-confmat
+print(confmat)
+print("-------実際クラス--------")
+print(t_test.value_counts())
+print("-------予測クラス--------")
+print(pd.Series(y_pred).value_counts())
+
+
+# In[45]:
+
+
+confmat2 = confusion_matrix(y_true=t_test,y_pred=y_pred)
+confmat2
 
 
 # In[77]:
@@ -104,7 +122,7 @@ plt.tight_layout()
 plt.show()
 
 
-# In[107]:
+# In[16]:
 
 
 #Accuracy Scoreを用いた場合
@@ -122,6 +140,4 @@ print(f"REC：{score_rec*100:.2f}%")
 #F-Measureを用いた場合
 score_f1 = f1_score(t_test,y_pred)
 print(f"F-score：{score_f1*100:.2f}%")
-
-(2*score_pre*score_rec) / (score_pre+score_rec)
 
